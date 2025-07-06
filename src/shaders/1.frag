@@ -1,15 +1,10 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec2 oTexCoords;
-
-uniform sampler2D ourTexture0;
-uniform sampler2D ourTexture1;
-
-uniform float mix_value;
+in vec2 o_texture_coord;
+uniform sampler2D tile_texture;
 
 void main()
 {
-   FragColor = mix(texture(ourTexture0, oTexCoords),
-   texture(ourTexture1, vec2(-oTexCoords.x, oTexCoords.y)), mix_value);
+   FragColor = texture(tile_texture, o_texture_coord);
 }
