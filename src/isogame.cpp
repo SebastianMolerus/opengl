@@ -44,42 +44,65 @@ int main()
 {
     GLFWwindow* window{ init() };
 
-    float vertices[] = {
-        // positions        // texture coords
-        -1.0f, 0.0f, 0.0f, 0.0, 0.5,
-        0.0f, 0.5f, 0.0f,  0.5, 0.75,
-        1.0f, 0.0f, 0.0f,   1.0, 0.5,
-        0.0f, -0.5f, 0.0f, 0.5, 0.25,
-        0.0f, 0.0f, 0.0f, 0.5, 0.5
+    float cube[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    unsigned indices[] = {
-        0, 4, 1,
-        4, 1, 2,
-        4, 2, 3,
-        4, 3, 0
-    };
+    vao vao{ "32" , cube };
 
-    vao vao1{ "32", vertices };
-    vao1.ebo(indices);
-
-    texture t;
-    t.another_texture("grass.png", GL_RGBA);
+    texture t{ "container.jpg" };
 
     shader s{ "1.vert", "1.frag", &t };
-
-    s.sampler_to_texture("tile_texture", "grass.png");
+    s.sampler_to_texture("container", "container.jpg");
 
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
 
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
     s.set_mat("view", view);
     s.set_mat("projection", projection);
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE | GL_FILL);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -88,22 +111,12 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        constexpr float scale_factor{ 32.0f };
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.3f, 0.2f, 0.0f));
+        s.set_mat("model", model);
 
-        for (int x = 0; x < 10; ++x) {
-            float x_dir = scale_factor - (x * scale_factor);
-            float y_dir = scale_factor / 2.0f - (x * scale_factor / 2.0f);
-            for (int y = 0; y < 10; ++y)
-            {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, { x_dir, y_dir, 0.0f });
-                model = glm::scale(model, { scale_factor, scale_factor, 0.0f });
-                s.set_mat("model", model);
-                glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
-                x_dir += scale_factor;
-                y_dir -= scale_factor / 2.0f;
-            }
-        }
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

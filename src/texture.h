@@ -9,6 +9,8 @@
 class texture
 {
 public:
+	texture() = default;
+	texture(std::string const& tex_name, int format = GL_RGB);
 	texture& another_texture(std::string const& tex_name, int format = GL_RGB);
 	void bind() const;
 	unsigned texture_unit(std::string const& tex_name) const;
