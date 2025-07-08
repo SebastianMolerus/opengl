@@ -14,8 +14,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1024;
+const unsigned int SCR_HEIGHT = 768;
 
 GLFWwindow* init()
 {
@@ -87,10 +87,7 @@ int main()
     };
 
     vao vao{ "32" , cube };
-
-    texture t{ "container.jpg" };
-
-    shader s{ "1.vert", "1.frag", &t };
+    shader s{ "1.vert", "1.frag"};
     s.sampler_to_texture("container", "container.jpg");
 
 
