@@ -7,8 +7,8 @@
 class vao
 {
 public:
-	vao(std::string const& format, std::span<float> data);
-	void ebo(std::span<unsigned> data);
+	vao(std::string const& format, std::span<const float> data);
+	void ebo(std::span<const unsigned> data);
 	void bind() const;
 
 	vao(vao const&) = delete;

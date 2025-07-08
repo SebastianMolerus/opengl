@@ -1,7 +1,7 @@
 #include "vao.h"
 #include <glad/glad.h>
 
-vao::vao(std::string const& config, std::span<float> v)
+vao::vao(std::string const& config, std::span<const float> v)
 {
 	glGenVertexArrays(1, &m_id);
 	glBindVertexArray(m_id);
@@ -27,7 +27,7 @@ vao::vao(std::string const& config, std::span<float> v)
 	}
 }
 
-void vao::ebo(std::span<unsigned> data)
+void vao::ebo(std::span<const unsigned> data)
 {
 	unsigned ebo;
 	glGenBuffers(1, &ebo);
