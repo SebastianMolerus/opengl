@@ -1,5 +1,4 @@
 #include "shader.h"
-#include "texture.h"
 #include <glad/glad.h>
 #include <fstream>
 #include <sstream>
@@ -80,14 +79,9 @@ shader::shader(std::string const& v, std::string const& f)
 	glUseProgram(m_id);
 }
 
-shader::shader(std::string const& vertex, std::string const& fragment, texture const* tex)
-	:shader(vertex, fragment)
-{
-	m_tex = tex;
-}
-
 void shader::bind()
 {
+	m_tex.bind();
 	glUseProgram(m_id);
 }
 
@@ -101,10 +95,10 @@ void shader::set_int(const std::string& name, int value) const
 	glUniform1i(glGetUniformLocation(m_id, name.c_str()), value);
 }
 
-void shader::sampler_to_texture(std::string const& sampler_name, std::string const& texture_name) const
+void shader::sampler_to_texture(std::string const& sampler_name, std::string const& texture_name, int format)
 {
-	assert(m_tex != nullptr);
-	set_int(sampler_name, m_tex->texture_unit(texture_name));
+	m_tex.another_texture(texture_name, format);
+	set_int(sampler_name, m_tex.texture_unit(texture_name));
 }
 
 void shader::set_mat(const std::string& name, glm::mat4 const& value) const
