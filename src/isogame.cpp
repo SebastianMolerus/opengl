@@ -160,14 +160,14 @@ void init_imgui(GLFWwindow* window)
     ImGui_ImplOpenGL3_Init();
 }
 
-void imgui_begin()
+void imgui_start()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void imgui_end()
+void imgui_stop()
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -231,17 +231,23 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 #ifdef ENABLE_IMGUI
-        imgui_begin();
+        imgui_start();
+        //ImGui::ShowDemoWindow(); // Show demo window! :)
 
         ImGui::Begin("Main Wnd");
+        ImGui::BeginDisabled();
+        ImGui::Checkbox("Gui focus (G)", &focus_imgui);
+        ImGui::SameLine();
+        bool p{ !focus_imgui };
+        ImGui::Checkbox("Free Cam (I)", &p);
+        ImGui::EndDisabled();
         ImGui::Text("Camera Pos X:%f Y:%f Z:%f", camera_pos.x, camera_pos.y, camera_pos.z);
         ImGui::SliderFloat3("Light Pos", glm::value_ptr(light_pos), -100.0f, 100.0f);
         ImGui::SliderFloat3("Light Color", glm::value_ptr(light_color), 0.0, 1.0f);
         ImGui::End();
 
-        imgui_end();
+        imgui_stop();
 #endif
-
         glfwSwapBuffers(window);
     }
 
@@ -266,7 +272,7 @@ void processInput(GLFWwindow* window)
         focus_imgui = true;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_RELEASE)
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         focus_imgui = false;
