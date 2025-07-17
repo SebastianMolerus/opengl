@@ -4,8 +4,9 @@
 
 add_definitions(-DSHADERS_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/shaders")
 add_definitions(-DTEXTURES_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/textures")
+add_definitions(-DENABLE_IMGUI)
 
-add_executable (isogame "isogame.cpp" "vao.cpp" "vao.h" "shader.h" "shader.cpp" "texture.cpp" )
+add_executable (isogame "isogame.cpp" "vao.cpp" "vao.h" "shader.h" "shader.cpp" "texture.cpp" "fps_camera.cpp" "fps_camera.h" "primitives.h")
 
 target_link_libraries(isogame PRIVATE glfw)
 target_link_libraries(isogame PRIVATE glad::glad)
