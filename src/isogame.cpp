@@ -119,10 +119,13 @@ int main()
 #endif
 
     vao lightVao{ "3" , cube };
-    vao objectVao{ "33" , cube_with_normals };
+    vao objectVao{ "332" , cube_normals_tex };
 
     shader lightShader{ "light.vert", "light.frag"};
     shader objectShader{ "object.vert", "object.frag"};
+    objectShader.sampler_to_texture("mat.diffuse", "container_diff.png", GL_RGBA);
+    objectShader.sampler_to_texture("mat.specular", "container_spec.png", GL_RGBA);
+    objectShader.set_float("mat.shininess", 32);
 
     cam_reset_last_xy(window);
 
@@ -141,10 +144,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         auto const view{ cam_get_view() };
-
-        light_pos.x = (((float)cos(glfwGetTime()) + 1) / 2.0f) * 60.0f;
-        light_pos.z = (float)cos(glfwGetTime() * 10.0f);
-        light_pos.y = (float)sin(glfwGetTime() * 10.0f);
 
         // Light Source
         lightShader.bind();
@@ -168,36 +167,17 @@ int main()
         objectShader.set_mat("view", view);
         objectShader.set_mat("projection", projection);
 
-        objectShader.set_vec3("mat.ambient", { 1.0f, 0.5f, 0.31f });
-        objectShader.set_vec3("mat.diffuse", { 1.0f, 0.5f, 0.31f });
-        objectShader.set_vec3("mat.specular", glm::vec3{ 1.0f });
-        objectShader.set_float("mat.shininess", 32.0f);
+        objectShader.set_vec3("view_pos", cam_get_pos());
 
-        glm::vec3 diffuseColor = light_color * glm::vec3(0.8f);
-        glm::vec3 ambientColor = light_color * glm::vec3(0.2f);
-
-        objectShader.set_vec3("light.ambient", ambientColor);
-        objectShader.set_vec3("light.diffuse", diffuseColor);
-        objectShader.set_vec3("light.specular", glm::vec3{0.5f});
+        objectShader.set_vec3("light.ambient", glm::vec3{ 0.2f });
+        objectShader.set_vec3("light.diffuse", glm::vec3{ 0.7f });
+        objectShader.set_vec3("light.specular", glm::vec3{ 1.0f });
         objectShader.set_vec3("light.pos", light_pos);
 
-        for (int i = 0; i < 20; ++i)
-        {
-            glm::mat4 object_model{ 1.0f };
-            object_model = glm::translate(object_model, {i*3, 0, 0});
-            objectShader.set_mat("model", object_model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+        glm::mat4 object_model{ 1.0f };
+        objectShader.set_mat("model", object_model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-            object_model = glm::mat4{ 1.0f };
-            object_model = glm::translate(object_model, { i * 3, 0, -3 });
-            objectShader.set_mat("model", object_model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-
-            object_model = glm::mat4{ 1.0f };
-            object_model = glm::translate(object_model, { i * 3, 0, 3 });
-            objectShader.set_mat("model", object_model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
 #ifdef ENABLE_IMGUI
         imgui_start();
 
@@ -205,7 +185,7 @@ int main()
         ImGui::BeginDisabled();
         ImGui::Checkbox("Focus GUI ... press (G) or (I) to escape.", &focus_gui);
         ImGui::EndDisabled();
-        ImGui::SliderFloat3("Light Pos", glm::value_ptr(light_pos), -1000.0f, 1000.0f);
+        ImGui::SliderFloat3("Light Pos", glm::value_ptr(light_pos), -20.0f, 20.0f);
         ImGui::SliderFloat3("Light Color", glm::value_ptr(light_color), 0.0, 1.0f);
         ImGui::End();
 

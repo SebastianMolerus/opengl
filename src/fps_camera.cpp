@@ -76,3 +76,8 @@ glm::mat4 cam_get_view()
 {
     return glm::lookAt(camera_pos, camera_pos + camera_front, camera_up);
 }
+
+glm::vec3 cam_get_pos()
+{
+    return camera_pos;
+}

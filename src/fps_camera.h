@@ -13,4 +13,6 @@ void cam_process_mouse(double xpos, double ypos);
 
 glm::mat4 cam_get_view();
 
+glm::vec3 cam_get_pos();
+
 #endif
