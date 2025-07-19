@@ -81,3 +81,8 @@ glm::vec3 cam_get_pos()
 {
     return camera_pos;
 }
+
+glm::vec3 cam_get_dir()
+{
+    return camera_front;
+}

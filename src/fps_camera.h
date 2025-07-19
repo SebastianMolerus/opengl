@@ -15,4 +15,6 @@ glm::mat4 cam_get_view();
 
 glm::vec3 cam_get_pos();
 
+glm::vec3 cam_get_dir();
+
 #endif

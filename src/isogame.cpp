@@ -20,8 +20,8 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 1024;
+const unsigned int SCR_WIDTH = 1024;
+const unsigned int SCR_HEIGHT = 768;
 
 glm::mat4 const projection{ glm::perspective(glm::radians(45.0f),
     (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f) };
@@ -123,9 +123,26 @@ int main()
 
     shader lightShader{ "light.vert", "light.frag"};
     shader objectShader{ "object.vert", "object.frag"};
+
+    objectShader.set_mat("projection", projection);
+
     objectShader.sampler_to_texture("mat.diffuse", "container_diff.png", GL_RGBA);
     objectShader.sampler_to_texture("mat.specular", "container_spec.png", GL_RGBA);
     objectShader.set_float("mat.shininess", 32);
+
+    objectShader.set_vec3("directional_light.ambient", glm::vec3{ 0.1f });
+    objectShader.set_vec3("directional_light.diffuse", glm::vec3{ 0.3f });
+    objectShader.set_vec3("directional_light.specular", glm::vec3{ 1.0f });
+    objectShader.set_vec3("directional_light.direction", -0.3, -1.0f, 0.0f);
+
+    objectShader.set_vec3("spot_light.ambient", glm::vec3{ 0.2f });
+    objectShader.set_vec3("spot_light.diffuse", glm::vec3{ 0.5f });
+    objectShader.set_vec3("spot_light.specular", glm::vec3{ 1.0f });
+    objectShader.set_float("spot_light.cut_off", glm::cos(glm::radians(12.5f)));
+    objectShader.set_float("spot_light.outer_cutoff", glm::cos(glm::radians(15.5f)));
+    //objectShader.set_float("point_light.constant", 1.0f);
+    //objectShader.set_float("point_light.linear", 0.09f);
+    //objectShader.set_float("point_light.quadratic", 0.032f);
 
     cam_reset_last_xy(window);
 
@@ -161,22 +178,39 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // Object
+        glm::vec3 cubePositions[] = {
+            glm::vec3(0.0f,  0.0f,  0.0f),
+            glm::vec3(2.0f,  5.0f, -15.0f),
+            glm::vec3(-1.5f, -2.2f, -2.5f),
+            glm::vec3(-3.8f, -2.0f, -12.3f),
+            glm::vec3(2.4f, -0.4f, -3.5f),
+            glm::vec3(-1.7f,  3.0f, -7.5f),
+            glm::vec3(1.3f, -2.0f, -2.5f),
+            glm::vec3(1.5f,  2.0f, -2.5f),
+            glm::vec3(1.5f,  0.2f, -1.5f),
+            glm::vec3(-1.3f,  1.0f, -1.5f)
+        };
+
+
         objectVao.bind();
         objectShader.bind();
 
         objectShader.set_mat("view", view);
-        objectShader.set_mat("projection", projection);
-
         objectShader.set_vec3("view_pos", cam_get_pos());
+        objectShader.set_vec3("spot_light.position", cam_get_pos());
+        objectShader.set_vec3("spot_light.direction", cam_get_dir());
 
-        objectShader.set_vec3("light.ambient", glm::vec3{ 0.2f });
-        objectShader.set_vec3("light.diffuse", glm::vec3{ 0.7f });
-        objectShader.set_vec3("light.specular", glm::vec3{ 1.0f });
-        objectShader.set_vec3("light.pos", light_pos);
 
-        glm::mat4 object_model{ 1.0f };
-        objectShader.set_mat("model", object_model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            objectShader.set_mat("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
 #ifdef ENABLE_IMGUI
         imgui_start();

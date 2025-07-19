@@ -19,7 +19,7 @@ texture& texture::another_texture(std::string const& tex_name, int format)
 	if (!std::filesystem::exists(textures_root / tex_name))
 		throw std::runtime_error("Cannot find texture.");
 
-	glActiveTexture(GL_TEXTURE0 + m_ids.size());
+	glActiveTexture(GL_TEXTURE0 + (GLenum)m_ids.size());
 	m_ids.push_back({ tex_name, -1 });
 	glGenTextures(1, &m_ids.back().second);
 	glBindTexture(GL_TEXTURE_2D, m_ids.back().second);
@@ -47,7 +47,7 @@ texture& texture::another_texture(std::string const& tex_name, int format)
 
 void texture::bind() const
 {
-	for (size_t i = 0; i < m_ids.size(); ++i)
+	for (GLenum i = 0; i < m_ids.size(); ++i)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, m_ids[i].second);
