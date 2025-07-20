@@ -126,6 +126,6 @@ vec3 calculate_spot_light()
 void main()
 {
     vec3 result = calculate_global_light();
-    result+= calculate_spot_light();
+    result+= calculate_point_light();
     FragColor = vec4(result, 1.0);
 }

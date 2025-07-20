@@ -135,14 +135,12 @@ int main()
     objectShader.set_vec3("directional_light.specular", glm::vec3{ 1.0f });
     objectShader.set_vec3("directional_light.direction", -0.3, -1.0f, 0.0f);
 
-    objectShader.set_vec3("spot_light.ambient", glm::vec3{ 0.2f });
-    objectShader.set_vec3("spot_light.diffuse", glm::vec3{ 0.5f });
-    objectShader.set_vec3("spot_light.specular", glm::vec3{ 1.0f });
-    objectShader.set_float("spot_light.cut_off", glm::cos(glm::radians(12.5f)));
-    objectShader.set_float("spot_light.outer_cutoff", glm::cos(glm::radians(15.5f)));
-    //objectShader.set_float("point_light.constant", 1.0f);
-    //objectShader.set_float("point_light.linear", 0.09f);
-    //objectShader.set_float("point_light.quadratic", 0.032f);
+    objectShader.set_vec3("point_light.ambient", glm::vec3{ 0.2f });
+    objectShader.set_vec3("point_light.diffuse", glm::vec3{ 0.5f });
+    objectShader.set_vec3("point_light.specular", glm::vec3{ 1.0f });
+    objectShader.set_float("point_light.constant", 1.0f);
+    objectShader.set_float("point_light.linear", 0.09f);
+    objectShader.set_float("point_light.quadratic", 0.032f);
 
     cam_reset_last_xy(window);
 
@@ -197,9 +195,7 @@ int main()
 
         objectShader.set_mat("view", view);
         objectShader.set_vec3("view_pos", cam_get_pos());
-        objectShader.set_vec3("spot_light.position", cam_get_pos());
-        objectShader.set_vec3("spot_light.direction", cam_get_dir());
-
+        objectShader.set_vec3("point_light.position", light_pos);
 
         for (unsigned int i = 0; i < 10; i++)
         {

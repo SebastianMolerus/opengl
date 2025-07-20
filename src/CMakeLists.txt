@@ -12,6 +12,8 @@ target_link_libraries(isogame PRIVATE glfw)
 target_link_libraries(isogame PRIVATE glad::glad)
 target_link_libraries(isogame PRIVATE glm::glm)
 target_link_libraries(isogame PRIVATE imgui::imgui)
+target_link_libraries(isogame PRIVATE assimp::assimp)
+
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET isogame PROPERTY CXX_STANDARD 20)

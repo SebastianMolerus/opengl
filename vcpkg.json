@@ -1,11 +1,12 @@
 {
-    "dependencies": [
-      "glad",
-      "glfw3",
-      "glm",
-      {
-        "name": "imgui",
-        "features": [ "glfw-binding", "opengl3-binding" ]
-      }
-    ]
+  "dependencies": [
+    "assimp",
+    "glad",
+    "glfw3",
+    "glm",
+    {
+      "name": "imgui",
+      "features": [ "glfw-binding", "opengl3-binding" ]
+    }
+  ]
 }
