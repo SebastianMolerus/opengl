@@ -55,14 +55,18 @@ mesh model::process_mesh(aiMesh* mesh, const aiScene* scene)
 	assert(scene);
 
 	std::vector<vertex> vertices;
+	vertices.reserve(mesh->mNumVertices);
+
 	std::vector<unsigned> indices;
+	indices.reserve(mesh->mNumFaces);
+
 	std::vector<unsigned> diffuse_textures;
 	std::vector<unsigned> specular_textures;
 
 	// Vertices
-	vertex v{};
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i)
 	{
+		vertex v{};
 		v.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
 		v.normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
