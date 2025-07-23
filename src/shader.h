@@ -9,7 +9,7 @@ class shader
 {
 public:
 	shader(std::string const& vertex, std::string const& fragment);
-	void bind();
+	void bind() const;
 
 	void sampler_to_texture(std::string const& sampler_name, std::string const& texture_name, int format = GL_RGB);
 	void set_float(const std::string& name, float value) const;

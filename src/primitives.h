@@ -1,6 +1,8 @@
 #ifndef __PRIMITIVES_H__
 #define __PRIMITIVES_H__
 
+#include "mesh.h"
+
 float const cube[]{
         // position
         -0.5f, -0.5f, -0.5f,
@@ -135,5 +137,19 @@ float const cube_normals_tex[] = {
     -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 };
+
+std::vector<vertex> cube_as_vertex()
+{
+    std::vector<vertex> result;
+
+    for (int i = 0; i < 36; ++i)
+    {
+        char const* ptr = (char const*)cube_normals_tex;
+        vertex* v = (vertex*)(ptr + (i * sizeof(vertex)));
+        result.push_back(*v);
+    }
+
+    return result;
+}
 
 #endif

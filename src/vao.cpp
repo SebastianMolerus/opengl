@@ -1,7 +1,7 @@
 #include "vao.h"
 #include <glad/glad.h>
 
-vao::vao(std::string const& config, std::span<const float> v)
+vao::vao(std::string const format, std::span<const float> v)
 {
 	glGenVertexArrays(1, &m_id);
 	glBindVertexArray(m_id);
@@ -12,12 +12,12 @@ vao::vao(std::string const& config, std::span<const float> v)
 	glBufferData(GL_ARRAY_BUFFER, v.size_bytes(), v.data(), GL_STATIC_DRAW);
 
 	unsigned stride{};
-	for (auto const& l : config)
+	for (auto const& l : format)
 		stride += (l - '0');
 
 	unsigned index{};
 	unsigned val{};
-	for (auto const& l : config)
+	for (auto const& l : format)
 	{
 		glVertexAttribPointer(index, l - '0', GL_FLOAT,
 			GL_FALSE, stride * sizeof(float), (void*)(val * sizeof(float)));

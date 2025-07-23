@@ -4,7 +4,10 @@
 #include <string>
 #include "glad/glad.h"
 #include <vector>
+#include <filesystem>
 #include <string>
+
+unsigned texture_from_file(std::filesystem::path const);
 
 class texture
 {

@@ -79,7 +79,7 @@ shader::shader(std::string const& v, std::string const& f)
 	glUseProgram(m_id);
 }
 
-void shader::bind()
+void shader::bind() const
 {
 	m_tex.bind();
 	glUseProgram(m_id);
@@ -87,11 +87,17 @@ void shader::bind()
 
 void shader::set_float(const std::string& name, float value) const
 {
+#if !NDEBUG
+	glUseProgram(m_id);
+#endif
 	glUniform1f(glGetUniformLocation(m_id, name.c_str()), value);
 }
 
 void shader::set_int(const std::string& name, int value) const
 {
+#if !NDEBUG
+	glUseProgram(m_id);
+#endif
 	glUniform1i(glGetUniformLocation(m_id, name.c_str()), value);
 }
 
@@ -103,15 +109,24 @@ void shader::sampler_to_texture(std::string const& sampler_name, std::string con
 
 void shader::set_mat(const std::string& name, glm::mat4 const& value) const
 {
+#if !NDEBUG
+	glUseProgram(m_id);
+#endif
 	glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void shader::set_vec3(const std::string& name, glm::vec3 const& value) const
 {
+#if !NDEBUG
+	glUseProgram(m_id);
+#endif
 	glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void shader::set_vec3(const std::string& name, float v1, float v2, float v3) const
 {
+#if !NDEBUG
+	glUseProgram(m_id);
+#endif
 	glUniform3f(glGetUniformLocation(m_id, name.c_str()), v1, v2, v3);
 }
